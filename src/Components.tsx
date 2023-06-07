@@ -1,6 +1,7 @@
 import { jsx } from 'hono/jsx'
 import { Layout } from './Layout'
 import type { Comment } from './types'
+import { CommentIcon } from './Icon'
 
 const Form = () => {
   return (
@@ -20,28 +21,31 @@ const Form = () => {
 
 export const Top = (props: { posts: Comment[] }) => {
   const posts = props.posts
+
+  const formatId = (uuid: string) => {
+    return uuid.split('-')[4]
+  }
   return (
     <Layout>
-      <div>
-        <h1 class='mb-0 inline'>{props.posts.length} 件のコメント</h1>
-        <select class='inline w-32 ml-4'>
-          <option value='' selected>
-            新しい順
-          </option>
-          <option>評価順</option>
-        </select>
+      <div class='sticky top-0 flex justify-between p-2 border-b-2'>
+        <h1 class='flex mb-0 inline'>
+          <CommentIcon />
+          <span class='pl-1'>{props.posts.length}</span>
+        </h1>
+        <div class='inline ml-4'>
+          <span>おすすめ順</span>｜<span>新着順</span>
+        </div>
       </div>
-      <Form />
-      <div class='h-full overflow-y-auto p-2'>
+      {/* <Form /> */}
+      <div class='h-full overflow-y-auto divide-y'>
         {posts.reverse().map((post) => {
           return (
-            <article
-              class='shadow-md my-4'
-              style='border: 1px solid rgba(0,0,0,.1);'
-            >
+            <div class='p-2'>
+              <small>{`${post.created_at}  / ID:${formatId(
+                post.author_uuid
+              )}`}</small>
               <p>{post.content}</p>
-              <small>{post.author_uuid}</small>
-            </article>
+            </div>
           )
         })}
       </div>
