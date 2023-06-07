@@ -1,8 +1,0 @@
-name = "first-d1"
-main = "src/index.tsx"
-compatibility_date = "2023-05-01"
-
-[[ d1_databases ]]
-binding = "DB"
-database_name = "blog"
-database_id = ""

@@ -1,5 +1,9 @@
-export type Post = {
+export type Comment = {
   id: number
-  title: string
-  body: string
+  post_slug: string
+  content: string
+  created_at: string
+  updated_at: string
+  likes: string
+  author_uuid
 }

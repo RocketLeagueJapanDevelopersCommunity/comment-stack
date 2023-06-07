@@ -1,14 +1,15 @@
 {
-  "name": "hello-d1",
+  "name": "comment-stack",
   "version": "0.0.2",
   "main": "src/index.tsx",
   "license": "MIT",
   "private": true,
   "scripts": {
     "test": "jest",
-    "dev": "wrangler dev src/index.tsx",
+    "dev": "wrangler dev src/index.tsx --local",
+    "dev:db": "wrangler d1 execute comment-db --file ./schemas/comments.sql --local",
     "deploy": "wrangler deploy --minify src/index.tsx",
-    "create:db": "wrangler d1 execute blog --file ./blog.sql"
+    "create:db": "wrangler d1 execute comment-db --file ./schemas/comments.sql"
   },
   "devDependencies": {
     "@cloudflare/workers-types": "^4.20221111.1",
