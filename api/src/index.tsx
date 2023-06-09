@@ -1,8 +1,6 @@
 import { Hono } from 'hono'
-import { jsx } from 'hono/jsx'
 import { z } from 'zod'
 import { zValidator } from '@hono/zod-validator'
-import { Top } from './components'
 import type { Comment } from './types'
 
 type Env = {
@@ -16,8 +14,7 @@ app.get('/', async (c) => {
   const { results } = await c.env.DB.prepare(
     `SELECT id,post_slug,content,created_at,updated_at,likes,author_uuid FROM comments;`
   ).all<Comment>()
-  const posts = results
-  return c.html(<Top posts={posts} />)
+  return c.json(results)
 })
 
 app.post(
@@ -29,7 +26,7 @@ app.post(
     }),
     (res, c) => {
       if (!res.success) {
-        return c.redirect('/')
+        return c.json({ message: 'body invalid' }, 400)
       }
     }
   ),
@@ -40,10 +37,10 @@ app.post(
     )
       .bind('rljapan-site-1', body, 'uuidv4')
       .run()
-    return c.redirect('/')
+    return c.json({ message: 'success' }, 200)
   }
 )
 
-app.get('/hello', (c) => c.text('Hello!'))
+app.get('/hello', (c) => c.json('Hello!'))
 
 export default app
