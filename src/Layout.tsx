@@ -6,14 +6,14 @@ export const Layout = (props: any) => html`<!DOCTYPE html>
       <meta charset="utf-8" />
       <meta name="viewport" content="width=device-width, initial-scale=1" />
       <title>comment-app</title>
-      <script src="https://cdn.tailwindcss.com"></script>
+      <script src="https://cdn.tailwindcss.com/3.3.2"></script>
+      <style>
+        * {
+          color: #2b2c30;
+        }
+      </style>
     </head>
     <body>
-      <main
-        class="container"
-        style="height: 100vh; overflow: hidden; padding: 0;"
-      >
-        ${props.children}
-      </main>
+      <main class="h-screen overflow-hidden p-0">${props.children}</main>
     </body>
   </html>`
