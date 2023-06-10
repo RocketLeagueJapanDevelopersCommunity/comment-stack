@@ -5,5 +5,5 @@ export type Comment = {
   created_at: string
   updated_at: string
   likes: string
-  author_uuid
+  author_uuid: string
 }
