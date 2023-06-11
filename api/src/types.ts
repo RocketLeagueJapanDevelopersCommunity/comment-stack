@@ -4,6 +4,7 @@ export type Comment = {
   content: string
   created_at: string
   updated_at: string
-  likes: string
-  author_uuid: string
+  likes: number
+  email: string
+  is_approved: number
 }

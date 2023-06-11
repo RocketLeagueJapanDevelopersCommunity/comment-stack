@@ -7,24 +7,24 @@ CREATE TABLE comments (
   created_at TIMESTAMP NOT NULL DEFAULT CURRENT_TIMESTAMP,
   updated_at TIMESTAMP NOT NULL DEFAULT CURRENT_TIMESTAMP,
   likes INTEGER DEFAULT 0,
-  author_uuid TEXT
+  email TEXT NOT NULL,
+  is_approved INTEGER DEFAULT 0
 );
 
 CREATE INDEX idx_comments_post_slug ON comments(post_slug);
 
-CREATE INDEX idx_comments_author_uuid ON comments(author_uuid);
-
 -- Optionally, uncomment the below query to create data
--- INSERT INTO
---   COMMENTS (post_slug, content, author_uuid)
--- VALUES
---   (
---     'rljapan-site-1',
---     'test1',
---     '123e79fb-7e05-47d2-89f8-c9b328d50ec5'
---   );
+INSERT INTO
+  COMMENTS (post_slug, content, email)
+VALUES
+  (
+    'rljapan-site-1',
+    'test1',
+    'a@a.com'
+  );
+
 -- show all comments;
--- SELECT
---   *
--- FROM
---   comments;
+SELECT
+  *
+FROM
+  comments;

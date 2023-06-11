@@ -6,18 +6,26 @@ import { Env } from '..'
 
 export const commentsApi = new Hono<{ Bindings: Env }>()
 
-// TODO: /:slug
+// TODO: 全ての情報を見れるAPIはemailで制限をかける
 commentsApi.get('/comments', async (c) => {
   const { results } = await c.env.DB.prepare(
-    `SELECT id,post_slug,content,created_at,updated_at,likes,author_uuid FROM comments;`
+    `SELECT id,post_slug,content,created_at,likes,email,is_approved FROM comments;`
   ).all<Comment>()
+  return c.json(results)
+})
+
+commentsApi.get('/:slug/comments', async (c) => {
+  const slug = c.req.param('slug')
+  const prdsql = `SELECT id,content,created_at,likes FROM comments WHERE post_slug = ? AND is_approved = 1;`
+  const sql = `SELECT id,post_slug,content,created_at,likes,email,is_approved FROM comments WHERE post_slug = ?;`
+  const { results } = await c.env.DB.prepare(sql).bind(slug).all<Comment>()
   return c.json(results)
 })
 
 const postComments = z.object({
   slug: z.string(),
   content: z.string().min(1).max(400),
-  uuid: z.string().uuid(),
+  email: z.string().email(),
 })
 
 commentsApi.post(
@@ -28,12 +36,16 @@ commentsApi.post(
     }
   }),
   async (c) => {
-    const { slug, content, uuid } = c.req.valid('json')
-    await c.env.DB.prepare(
-      `INSERT INTO comments(post_slug, content, author_uuid) VALUES(?, ?, ?);`
+    const { slug, content, email } = c.req.valid('json')
+    const { success } = await c.env.DB.prepare(
+      `INSERT INTO comments(post_slug, content, email) VALUES(?, ?, ?);`
     )
-      .bind(slug, content, uuid)
+      .bind(slug, content, email)
       .run()
-    return c.json({ message: 'success' }, 200)
+    if (success) {
+      return c.json('Created', 201)
+    } else {
+      return c.json('Something went wrong', 500)
+    }
   }
 )

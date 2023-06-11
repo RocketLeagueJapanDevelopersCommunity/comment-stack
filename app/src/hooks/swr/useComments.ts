@@ -6,8 +6,13 @@ import useSWR from "swr";
 const fetcher = (url: string) =>
   fetch(SERVER_ENDPOINT + url).then((res) => res.json());
 
-export const useComments = () => {
-  const { data, error, isLoading } = useSWR(`/comments`, fetcher);
+type useCommentsProps = {
+  slug?: string;
+};
+
+export const useComments = ({ slug }: useCommentsProps) => {
+  const query = slug ? `/${slug}` : "";
+  const { data, error, isLoading } = useSWR(`${query}/comments`, fetcher);
 
   return {
     comments: data as CommentType[],

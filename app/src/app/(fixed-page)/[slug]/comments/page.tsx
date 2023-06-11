@@ -1,32 +1,32 @@
 "use client";
-import { Header } from "@/app/(fixed-page)/comments/Header";
-import { IconGood } from "@/components/Icon";
+import { Header } from "@/app/(fixed-page)/[slug]/comments/Header";
+import { IconGood } from "@/app/components/Icon";
 import { CommentType } from "@/constants/types";
 import { useComments } from "@/hooks/swr/useComments";
 import { SessionProvider } from "next-auth/react";
 import Image from "next/image";
+import { useEffect } from "react";
 
-export default function CommentsPage() {
-  const { comments, isLoading, isError } = useComments();
+export default function CommentsPage({ params }: { params: { slug: string } }) {
+  const { comments, isLoading, isError } = useComments({ slug: params.slug });
 
   if (isLoading) return <div>Loading...</div>;
   if (isError) return <div>some went wrong...</div>;
 
-  const formatId = (uuid: string) => {
-    return uuid.split("-")[4];
-  };
-
   return (
     <SessionProvider>
       <div className="h-full overflow-y-auto pb-2">
-        <Header commentCount={comments.length} />
+        <Header commentCount={comments.length} slug={params.slug} />
+        {!isLoading && comments.length === 0 && (
+          <p className="text-center m-4 mt-8">コメントがありません。</p>
+        )}
         {comments.reverse().map((post) => {
           return (
             <div className="p-2 border-t-2" key={post.id}>
               <div className="mb-2">
                 <span className="text-sm font-bold">{`通りすがりの読者`}</span>
                 <span className="text-xs font-light ml-2">
-                  {`(${post.id}:${formatId(post.author_uuid)})`}
+                  {`(ID:${post.id})`}
                 </span>
                 <span className="block text-sm">{post.created_at}</span>
               </div>

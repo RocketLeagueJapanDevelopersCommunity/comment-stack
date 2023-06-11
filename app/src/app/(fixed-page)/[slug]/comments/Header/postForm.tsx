@@ -1,29 +1,28 @@
 import { SERVER_ENDPOINT } from "@/constants/api";
 import { useSession } from "next-auth/react";
 import Link from "next/link";
-import { useEffect, useState } from "react";
+import { useState } from "react";
 import { AuthModal } from "./authModal";
+import { stat } from "fs";
 
-export function PostForm() {
+type postFormParams = {
+  slug: string;
+};
+export function PostForm({ slug }: postFormParams) {
   const [isDetailExpanded, setIsDetailExpanded] = useState(false);
   const [isOpenAuthModal, setIsOpenAuthModal] = useState(false);
   const [inputText, setInputText] = useState(``);
   const { data: session, status } = useSession();
 
-  useEffect(() => {
-    console.log(session, status);
-  }, []);
-
   const handleSubmit = () => {
-    if (status === "unauthenticated") {
-      setIsOpenAuthModal(true);
-    } else if (status === "authenticated") {
+    if (status === "authenticated") {
       const data = {
-        slug: "example",
+        slug: slug,
         content: inputText,
-        uuid: "4a273b5a-980b-402c-9fa2-cedd9c08567e",
+        email: session.user?.email,
       };
-
+      console.log(data);
+      console.log(JSON.stringify(data));
       fetch(SERVER_ENDPOINT + "/comment", {
         method: "POST", // or 'PUT'
         headers: {
@@ -34,12 +33,14 @@ export function PostForm() {
         .then((response) => response.json())
         .then((data) => {
           console.log("Success:", data);
+          setInputText("");
+          setIsDetailExpanded(false);
         })
         .catch((error) => {
           console.error("Error:", error);
         });
     } else {
-      alert("もう一度試してください。");
+      setIsOpenAuthModal(true);
     }
   };
   const isValid = inputText.length < 1 || inputText.length > 400;
@@ -99,7 +100,7 @@ export function PostForm() {
                 </button>
                 <span
                   onClick={() => setIsDetailExpanded(false)}
-                  className="flex justify-center m-2 text-xs text-gray-600"
+                  className="flex justify-center m-2 text-xs text-gray-600 cursor-pointer"
                 >
                   キャンセル
                 </span>

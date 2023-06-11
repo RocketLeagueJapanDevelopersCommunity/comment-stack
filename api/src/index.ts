@@ -9,15 +9,19 @@ export type Env = {
 }
 
 const app = new Hono()
-app.get(
-  '*',
-  cache({
-    cacheName: 'api-stack-cache',
-    cacheControl: 'max-age=3600',
-  })
-)
+
+// TODO: 開発環境だとキャッシュ効きすぎて困るので使う時にコメントアウト外す
+// app.get(
+//   '*',
+//   cache({
+//     cacheName: 'api-stack-cache',
+//     cacheControl: 'max-age=3600',
+//   })
+// )
 app.use('/*', cors({ origin: ['http://localhost:3000'] }))
-app.use('/*', etag())
+
+// TODO: 同上
+// app.use('/*', etag())
 app.route('/api/v1/', commentsApi)
 
 app.get('/hello', (c) => c.json('Hello!'))
