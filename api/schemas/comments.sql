@@ -14,17 +14,16 @@ CREATE TABLE comments (
 CREATE INDEX idx_comments_post_slug ON comments(post_slug);
 
 -- Optionally, uncomment the below query to create data
-INSERT INTO
-  COMMENTS (post_slug, content, email)
-VALUES
-  (
-    'rljapan-site-1',
-    'test1',
-    'a@a.com'
-  );
-
+-- INSERT INTO
+--   COMMENTS (post_slug, content, email)
+-- VALUES
+--   (
+--     'rljapan-site-1',
+--     'test1',
+--     'a@a.com'
+--   );
 -- show all comments;
-SELECT
-  *
-FROM
-  comments;
+-- SELECT
+--   *
+-- FROM
+--   comments;
