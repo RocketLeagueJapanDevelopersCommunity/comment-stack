@@ -12,7 +12,10 @@ type useCommentsProps = {
 
 export const useComments = ({ slug }: useCommentsProps) => {
   const query = slug ? `/${slug}` : "";
-  const { data, error, isLoading } = useSWR(`${query}/comments`, fetcher);
+  const { data, error, isLoading, mutate } = useSWR(
+    `/comments${query}`,
+    fetcher
+  );
 
   return {
     comments: data as CommentType[],

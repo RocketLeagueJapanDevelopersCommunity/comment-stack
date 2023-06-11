@@ -1,7 +1,8 @@
 import { useSession } from "next-auth/react";
 import { PostForm } from "./postForm";
 import Image from "next/image";
-
+import { useSetAtom } from "jotai";
+import { isOpenAuthModalAtom } from "@/hooks/jotai/Atoms";
 type HeaderProps = {
   commentCount: number;
   slug: string;
@@ -9,6 +10,7 @@ type HeaderProps = {
 
 export function Header({ commentCount, slug }: HeaderProps) {
   const { data: session, status } = useSession();
+  const setOpenModal = useSetAtom(isOpenAuthModalAtom);
   // const handleOrderChange = () => {
   //   console.log("aaaa");
   // };
@@ -26,6 +28,7 @@ export function Header({ commentCount, slug }: HeaderProps) {
             width={40}
             height={40}
             className="rounded-full"
+            onClick={() => setOpenModal(true)}
           />
         )}
         {/* <div className="ml-4 text-sm">

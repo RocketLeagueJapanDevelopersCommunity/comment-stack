@@ -1,6 +1,6 @@
-DROP TABLE IF EXISTS comments;
+DROP TABLE IF EXISTS Comments;
 
-CREATE TABLE comments (
+CREATE TABLE Comments (
   id INTEGER PRIMARY KEY AUTOINCREMENT,
   post_slug TEXT NOT NULL,
   content TEXT NOT NULL,
@@ -11,7 +11,7 @@ CREATE TABLE comments (
   is_approved INTEGER DEFAULT 0
 );
 
-CREATE INDEX idx_comments_post_slug ON comments(post_slug);
+CREATE INDEX idx_comments_post_slug ON Comments(post_slug);
 
 -- Optionally, uncomment the below query to create data
 -- INSERT INTO

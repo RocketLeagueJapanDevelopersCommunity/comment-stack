@@ -1,14 +1,15 @@
 "use client";
 import { Header } from "@/app/(fixed-page)/[slug]/comments/Header";
-import { IconGood } from "@/app/components/Icon";
 import { CommentType } from "@/constants/types";
 import { useComments } from "@/hooks/swr/useComments";
 import { SessionProvider } from "next-auth/react";
-import Image from "next/image";
-import { useEffect } from "react";
+import { Likes } from "./likes";
+import { AuthModal } from "@/components/authModal";
 
 export default function CommentsPage({ params }: { params: { slug: string } }) {
-  const { comments, isLoading, isError } = useComments({ slug: params.slug });
+  const { comments, isLoading, isError } = useComments({
+    slug: params.slug,
+  });
 
   if (isLoading) return <div>Loading...</div>;
   if (isError) return <div>some went wrong...</div>;
@@ -16,27 +17,23 @@ export default function CommentsPage({ params }: { params: { slug: string } }) {
   return (
     <SessionProvider>
       <div className="h-full overflow-y-auto pb-2">
+        <AuthModal />
         <Header commentCount={comments.length} slug={params.slug} />
         {!isLoading && comments.length === 0 && (
           <p className="text-center m-4 mt-8">コメントがありません。</p>
         )}
         {comments.reverse().map((post) => {
           return (
-            <div className="p-2 border-t-2" key={post.id}>
-              <div className="mb-2">
+            <div className="p-2 pb-0 border-t-2" key={post.id}>
+              <div className="mb-1">
                 <span className="text-sm font-bold">{`通りすがりの読者`}</span>
                 <span className="text-xs font-light ml-2">
                   {`(ID:${post.id})`}
                 </span>
                 <span className="block text-sm">{post.created_at}</span>
               </div>
-              <TextComponent postId={post.id} text={post.content} />
-              <div className="flex flex-row-reverse">
-                <div className="inline-flex m-2 p-2 border">
-                  <IconGood />
-                  <span className="mx-2">{post.likes}</span>
-                </div>
-              </div>
+              <TextComponent post={post} />
+              <Likes post={post} />
             </div>
           );
         })}
@@ -45,19 +42,14 @@ export default function CommentsPage({ params }: { params: { slug: string } }) {
   );
 }
 
-type TextComponentProps = {
-  postId: CommentType["id"];
-  text: CommentType["content"];
-};
-
-function TextComponent(props: TextComponentProps) {
-  const lines = props.text.split(/\\n/g);
+function TextComponent(props: { post: CommentType }) {
+  const lines = props.post.content.split(/\\n/g);
   return (
     <div>
       {lines.map((line, i) => (
         <p
           className="break-all whitespace-pre-wrap"
-          key={`${props.postId}-text-line-${i}`}
+          key={`${props.post.id}-text-line-${i}`}
         >
           {line}
         </p>

@@ -1,18 +1,22 @@
 import { SERVER_ENDPOINT } from "@/constants/api";
+import { isOpenAuthModalAtom } from "@/hooks/jotai/Atoms";
+import { useAtom } from "jotai";
 import { useSession } from "next-auth/react";
+import { useRouter } from "next/navigation";
 import Link from "next/link";
 import { useState } from "react";
-import { AuthModal } from "./authModal";
-import { stat } from "fs";
 
 type postFormParams = {
   slug: string;
 };
 export function PostForm({ slug }: postFormParams) {
   const [isDetailExpanded, setIsDetailExpanded] = useState(false);
-  const [isOpenAuthModal, setIsOpenAuthModal] = useState(false);
-  const [inputText, setInputText] = useState(``);
+
+  const [inputText, setInputText] = useState("");
+  const [isAuthModalOpen, setIsAuthModalOpen] = useAtom(isOpenAuthModalAtom);
+
   const { data: session, status } = useSession();
+  const router = useRouter();
 
   const handleSubmit = () => {
     if (status === "authenticated") {
@@ -23,8 +27,8 @@ export function PostForm({ slug }: postFormParams) {
       };
       console.log(data);
       console.log(JSON.stringify(data));
-      fetch(SERVER_ENDPOINT + "/comment", {
-        method: "POST", // or 'PUT'
+      fetch(SERVER_ENDPOINT + "/comments/add", {
+        method: "POST",
         headers: {
           "Content-Type": "application/json",
         },
@@ -40,15 +44,13 @@ export function PostForm({ slug }: postFormParams) {
           console.error("Error:", error);
         });
     } else {
-      setIsOpenAuthModal(true);
+      setIsAuthModalOpen(true);
     }
   };
   const isValid = inputText.length < 1 || inputText.length > 400;
   return (
     <>
-      {" "}
       <div className="flex justify-center flex-wrap m-2">
-        <AuthModal isShow={isOpenAuthModal} isShowAction={setIsOpenAuthModal} />
         <div className="max-w-2xl w-full">
           <textarea
             rows={4}
@@ -59,7 +61,7 @@ export function PostForm({ slug }: postFormParams) {
             onFocus={() => setIsDetailExpanded(true)}
             onChange={(e) => setInputText(e.target.value)}
           ></textarea>
-          {isDetailExpanded && !isOpenAuthModal && (
+          {isDetailExpanded && !isAuthModalOpen && (
             <div className="relative text-right text-xs mt-1">
               <span
                 className={`absolute bottom-2 right-0 ${
