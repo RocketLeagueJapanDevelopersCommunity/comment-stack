@@ -6,6 +6,8 @@ import { SessionProvider } from "next-auth/react";
 import { CommentActions } from "@/app/(fixed-page)/[slug]/comments/commentActions";
 import { AuthModal } from "@/components/authModal";
 
+export const runtime = "edge";
+
 export default function CommentsPage({ params }: { params: { slug: string } }) {
   const { comments, isLoading, isError } = useComments({
     slug: params.slug,
