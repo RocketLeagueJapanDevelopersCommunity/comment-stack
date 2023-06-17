@@ -5,6 +5,7 @@ import { useSession } from "next-auth/react";
 import { useRouter } from "next/navigation";
 import Link from "next/link";
 import { useState } from "react";
+import { IconDown } from "@/components/Icon";
 
 type postFormParams = {
   slug: string;
@@ -16,7 +17,6 @@ export function PostForm({ slug }: postFormParams) {
   const [isAuthModalOpen, setIsAuthModalOpen] = useAtom(isOpenAuthModalAtom);
 
   const { data: session, status } = useSession();
-  const router = useRouter();
 
   const handleSubmit = () => {
     if (status === "authenticated") {
@@ -56,7 +56,7 @@ export function PostForm({ slug }: postFormParams) {
             rows={4}
             cols={30}
             value={inputText}
-            className="w-full p-2.5 text-sm rounded border border-gray-300 bg-slate-200"
+            className="w-full p-2.5 text-sm rounded border border-gray-300 bg-slate-100"
             placeholder="コメントする"
             onFocus={() => setIsDetailExpanded(true)}
             onChange={(e) => setInputText(e.target.value)}
@@ -71,20 +71,28 @@ export function PostForm({ slug }: postFormParams) {
             </div>
           )}
           {isDetailExpanded && (
-            <div>
-              <p className="mt-2 text-xs">
-                ※投稿前にご確認ください。
-                <br />
-                良識のあるコメントを心がけ、攻撃的な表現や他人が傷つく発言は避けましょう。なお、コメント投稿時に「
-                <Link
-                  className="text-blue-600 hover:underline"
-                  href="/comment-policy"
-                  target="_blank"
-                >
-                  コメントポリシー
-                </Link>
-                」に同意したとみなします。 コメントは承認後に表示されます。
-              </p>
+            <>
+              <div className="mt-2 text-xs">
+                <details className="group">
+                  <summary className="flex justify-between items-center font-medium cursor-pointer list-none">
+                    <span>投稿前にご確認ください。</span>
+                    <span className="transition group-open:rotate-180">
+                      <IconDown />
+                    </span>
+                  </summary>
+                  <p className="text-neutral-600 mt-3 group-open:animate-fadeIn">
+                    良識のあるコメントを心がけ、攻撃的な表現や他人が傷つく発言は避けましょう。なお、コメント投稿時に「
+                    <Link
+                      className="text-blue-600 hover:underline"
+                      href="/comment-policy"
+                      target="_blank"
+                    >
+                      コメントポリシー
+                    </Link>
+                    」に同意したとみなします。 コメントは承認後に表示されます。
+                  </p>
+                </details>
+              </div>
 
               <div className="mx-auto max-w-xs my-2 text-center">
                 <p className="text-xs mb-2 text-red-700">
@@ -96,7 +104,7 @@ export function PostForm({ slug }: postFormParams) {
                   onClick={handleSubmit}
                   disabled={isValid}
                   type="submit"
-                  className="w-full p-3 bg-black border rounded-full w-full font-semibold text-white disabled:bg-white disabled:text-gray-500"
+                  className="w-full px-3 py-2 bg-black border rounded-full w-full font-semibold text-white disabled:bg-white disabled:text-gray-500"
                 >
                   投稿
                 </button>
@@ -107,7 +115,7 @@ export function PostForm({ slug }: postFormParams) {
                   キャンセル
                 </span>
               </div>
-            </div>
+            </>
           )}
         </div>
       </div>

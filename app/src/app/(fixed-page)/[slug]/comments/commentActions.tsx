@@ -3,7 +3,7 @@ import { SERVER_ENDPOINT } from "@/constants/api";
 import { CommentType } from "@/constants/types";
 import { useSession } from "next-auth/react";
 
-export function Likes(props: { post: CommentType }) {
+export function CommentActions(props: { post: CommentType }) {
   const { data: session, status } = useSession();
 
   const handleLike = () => {
@@ -44,10 +44,10 @@ export function Likes(props: { post: CommentType }) {
         <span className="ml-2">共有</span>
       </div>
 
-      {/* <div className="flex justify-center items-center p-2 w-full cursor-pointer">
+      <div className="flex justify-center items-center p-2 w-full cursor-pointer">
         <IconReport />
         <span className="ml-2">報告</span>
-      </div> */}
+      </div>
     </div>
   );
 }

@@ -3,7 +3,7 @@ import { Header } from "@/app/(fixed-page)/[slug]/comments/Header";
 import { CommentType } from "@/constants/types";
 import { useComments } from "@/hooks/swr/useComments";
 import { SessionProvider } from "next-auth/react";
-import { Likes } from "./likes";
+import { CommentActions } from "@/app/(fixed-page)/[slug]/comments/commentActions";
 import { AuthModal } from "@/components/authModal";
 
 export default function CommentsPage({ params }: { params: { slug: string } }) {
@@ -33,7 +33,7 @@ export default function CommentsPage({ params }: { params: { slug: string } }) {
                 <span className="block text-sm">{post.created_at}</span>
               </div>
               <TextComponent post={post} />
-              <Likes post={post} />
+              <CommentActions post={post} />
             </div>
           );
         })}
