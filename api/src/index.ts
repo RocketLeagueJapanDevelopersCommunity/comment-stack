@@ -18,7 +18,7 @@ const app = new Hono().basePath('/api/v1')
 //     cacheControl: 'max-age=3600',
 //   })
 // )
-app.use('/*', cors({ origin: ['http://localhost:3000'] }))
+app.use('/*', cors())
 
 // TODO: 同上
 // app.use('/*', etag())
