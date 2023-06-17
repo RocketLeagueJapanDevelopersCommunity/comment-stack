@@ -1,23 +1,11 @@
+"use client";
 import { isOpenAuthModalAtom } from "@/hooks/jotai/Atoms";
+import { useAuth } from "@/hooks/useAuth";
 import { useAtom } from "jotai";
-import { signIn, signOut, useSession } from "next-auth/react";
-import { Dispatch, SetStateAction, useState } from "react";
 
 export function AuthModal() {
-  const { data: session, status } = useSession();
   const [isOpen, setIsOpen] = useAtom(isOpenAuthModalAtom);
-  const handleLogin = () => {
-    signIn()
-      .then((res) => {
-        console.log(res);
-        console.log("signIn successful");
-      })
-      .catch((e) => console.log(e));
-  };
-
-  const handleLogout = () => {
-    signOut();
-  };
+  const { userData, handleLogin, handleLogout } = useAuth();
 
   return (
     isOpen && (
@@ -27,16 +15,14 @@ export function AuthModal() {
             <div className="m-8 my-20 max-w-[400px]">
               <div className="mb-8">
                 <h1 className="mb-4 text-3xl font-extrabold">
-                  {status !== "authenticated"
-                    ? "ログインが必要です"
-                    : `${session.user?.name}でログイン ✅`}
+                  {userData ? "ログイン中です" : "ログインが必要です"}
                 </h1>
                 <p className="text-gray-600">
                   ログインすることでコメントすることが出来ます。
                 </p>
               </div>
               <div className="space-y-4 text-center">
-                {status !== "authenticated" && (
+                {!userData && (
                   <>
                     <button
                       onClick={handleLogin}
@@ -52,7 +38,7 @@ export function AuthModal() {
                     </button>
                   </>
                 )}
-                {status === "authenticated" && (
+                {userData && (
                   <>
                     <button
                       onClick={handleLogout}

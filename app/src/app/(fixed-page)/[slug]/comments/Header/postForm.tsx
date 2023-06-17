@@ -1,11 +1,12 @@
 import { SERVER_ENDPOINT } from "@/constants/api";
 import { isOpenAuthModalAtom } from "@/hooks/jotai/Atoms";
 import { useAtom } from "jotai";
-import { useSession } from "next-auth/react";
+// import { useSession } from "next-auth/react";
 import { useRouter } from "next/navigation";
 import Link from "next/link";
 import { useState } from "react";
 import { IconDown } from "@/components/Icon";
+import { useAuth } from "@/hooks/useAuth";
 
 type postFormParams = {
   slug: string;
@@ -15,15 +16,18 @@ export function PostForm({ slug }: postFormParams) {
 
   const [inputText, setInputText] = useState("");
   const [isAuthModalOpen, setIsAuthModalOpen] = useAtom(isOpenAuthModalAtom);
-
-  const { data: session, status } = useSession();
+  const { userData } = useAuth();
 
   const handleSubmit = () => {
-    if (status === "authenticated") {
+    if (!userData) {
+      setIsAuthModalOpen(true);
+      return;
+    }
+    if (userData.aud === "authenticated") {
       const data = {
         slug: slug,
         content: inputText,
-        email: session.user?.email,
+        email: userData.email,
       };
       console.log(data);
       console.log(JSON.stringify(data));

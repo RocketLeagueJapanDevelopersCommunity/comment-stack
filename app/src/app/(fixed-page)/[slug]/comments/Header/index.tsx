@@ -1,15 +1,15 @@
-import { useSession } from "next-auth/react";
 import { PostForm } from "./postForm";
 import Image from "next/image";
 import { useSetAtom } from "jotai";
 import { isOpenAuthModalAtom } from "@/hooks/jotai/Atoms";
+import { useAuth } from "@/hooks/useAuth";
 type HeaderProps = {
   commentCount: number;
   slug: string;
 };
 
 export function Header({ commentCount, slug }: HeaderProps) {
-  const { data: session, status } = useSession();
+  const { userData } = useAuth();
   const setOpenModal = useSetAtom(isOpenAuthModalAtom);
   // const handleOrderChange = () => {
   //   console.log("aaaa");
@@ -21,10 +21,10 @@ export function Header({ commentCount, slug }: HeaderProps) {
         <h2>
           コメント <span className="text-xs">({commentCount}件)</span>
         </h2>
-        {status === "authenticated" && session && (
+        {userData && userData.aud === "authenticated" && (
           <Image
-            src={session.user?.image ?? ""}
-            alt={`${session.user?.name}のアイコン`}
+            src={userData.user_metadata.avatar_url}
+            alt={`${userData.user_metadata.full_name}のアイコン`}
             width={40}
             height={40}
             className="rounded-full"
