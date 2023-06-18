@@ -15,7 +15,7 @@ commentsApi.get('/dashboard', async (c) => {
 
 commentsApi.get('/:slug', async (c) => {
   const slug = c.req.param('slug')
-  const sql = `SELECT id,content,created_at,likes FROM comments WHERE post_slug = ? AND is_approved = 0;`
+  const sql = `SELECT id,content,created_at,likes FROM comments WHERE post_slug = ? AND is_approved = 1;`
   const { results } = await c.env.DB.prepare(sql).bind(slug).all<Comment>()
   return c.json(results)
 })
@@ -42,6 +42,33 @@ commentsApi.post(
       .run()
     if (success) {
       return c.json('Created', 201)
+    } else {
+      return c.json('Something went wrong', 500)
+    }
+  }
+)
+
+const postApprove = z.object({
+  id: z.number(),
+  approve: z.number(),
+})
+
+commentsApi.post(
+  '/approve',
+  zValidator('json', postApprove, (res, c) => {
+    if (!res.success) {
+      return c.json({ message: res }, 400)
+    }
+  }),
+  async (c) => {
+    const { id, approve } = c.req.valid('json')
+    const { success } = await c.env.DB.prepare(
+      `UPDATE comments SET is_approved = ? WHERE id = ?`
+    )
+      .bind(approve, id)
+      .run()
+    if (success) {
+      return c.json('Updated', 201)
     } else {
       return c.json('Something went wrong', 500)
     }
