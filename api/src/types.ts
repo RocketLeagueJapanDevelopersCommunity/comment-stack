@@ -5,6 +5,6 @@ export type Comment = {
   created_at: string
   updated_at: string
   likes: number
-  email: string
+  user_id: string
   is_approved: number
 }

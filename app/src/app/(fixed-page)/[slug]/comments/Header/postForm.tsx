@@ -25,7 +25,7 @@ export function PostForm({ slug }: postFormParams) {
       const data = {
         slug: slug,
         content: inputText,
-        email: userData.email,
+        user_id: userData.id,
       };
       console.log(data);
       console.log(JSON.stringify(data));
