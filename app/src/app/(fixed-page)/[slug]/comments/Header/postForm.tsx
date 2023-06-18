@@ -1,8 +1,6 @@
 import { SERVER_ENDPOINT } from "@/constants/api";
 import { isOpenAuthModalAtom } from "@/hooks/jotai/Atoms";
 import { useAtom } from "jotai";
-// import { useSession } from "next-auth/react";
-import { useRouter } from "next/navigation";
 import Link from "next/link";
 import { useState } from "react";
 import { IconDown } from "@/components/Icon";
@@ -27,7 +25,7 @@ export function PostForm({ slug }: postFormParams) {
       const data = {
         slug: slug,
         content: inputText,
-        email: userData.email,
+        user_id: userData.id,
       };
       console.log(data);
       console.log(JSON.stringify(data));

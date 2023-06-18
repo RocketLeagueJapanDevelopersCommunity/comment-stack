@@ -1,5 +1,4 @@
 import { PostForm } from "./postForm";
-import Image from "next/image";
 import { useSetAtom } from "jotai";
 import { isOpenAuthModalAtom } from "@/hooks/jotai/Atoms";
 import { useAuth } from "@/hooks/useAuth";
@@ -22,7 +21,8 @@ export function Header({ commentCount, slug }: HeaderProps) {
           コメント <span className="text-xs">({commentCount}件)</span>
         </h2>
         {userData && userData.aud === "authenticated" && (
-          <Image
+          // eslint-disable-next-line @next/next/no-img-element
+          <img
             src={userData.user_metadata.avatar_url}
             alt={`${userData.user_metadata.full_name}のアイコン`}
             width={40}

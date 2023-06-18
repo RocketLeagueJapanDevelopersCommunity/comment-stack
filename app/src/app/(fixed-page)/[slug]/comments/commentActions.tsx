@@ -4,32 +4,6 @@ import { CommentType } from "@/constants/types";
 // import { useSession } from "next-auth/react";
 
 export function CommentActions(props: { post: CommentType }) {
-  // const { data: session, status } = useSession();
-
-  // const handleLike = () => {
-  //   if (status === "authenticated") {
-  //     const data = {
-  //       slug: "",
-  //       content: "inputText",
-  //       email: session.user?.email,
-  //     };
-  //     fetch(SERVER_ENDPOINT + "/comments/add", {
-  //       method: "POST",
-  //       headers: {
-  //         "Content-Type": "application/json",
-  //       },
-  //       body: JSON.stringify(data),
-  //     })
-  //       .then((response) => response.json())
-  //       .then((data) => {
-  //         console.log("Success:", data);
-  //       })
-  //       .catch((error) => {
-  //         console.error("Error:", error);
-  //       });
-  //   }
-  // };
-
   return (
     <div className="flex justify-evenly text-gray-500 mt-1 text-xs">
       <div className="flex justify-center items-center p-2 w-full cursor-pointer hover:bg-gray-200">
