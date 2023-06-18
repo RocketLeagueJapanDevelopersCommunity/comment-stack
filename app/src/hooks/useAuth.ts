@@ -22,17 +22,31 @@ export const useAuth = () => {
   }, [supabase.auth]);
 
   const handleLogin = async () => {
-    const { data, error } = await supabase.auth.signInWithOAuth({
-      provider: "discord",
-      options: {
-        redirectTo: location.href,
-      },
-    });
+    await supabase.auth
+      .signInWithOAuth({
+        provider: "discord",
+        options: {
+          redirectTo: location.href,
+        },
+      })
+      .then(() => {
+        console.log("[log] Login Success!");
+      })
+      .catch((e) => {
+        console.log("[log] ", e);
+      });
   };
 
   const handleLogout = async () => {
-    const { error } = await supabase.auth.signOut();
-    router.refresh();
+    console.log("handleLogout SignOut");
+    await supabase.auth
+      .signOut()
+      .then(() => {
+        router.refresh();
+      })
+      .catch((e) => {
+        console.error(e);
+      });
   };
   return {
     userData: user,
